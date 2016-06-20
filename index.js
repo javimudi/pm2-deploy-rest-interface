@@ -28,7 +28,7 @@ var getter = function(req, res){
 
 var action = function(req, res){
 	var body = req.params;
-	console.log(body);
+	debug.info(body);
 	res.send(200);
 }
 
