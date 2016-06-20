@@ -1,0 +1,15 @@
+{
+  "name": "pm2-rest-interface",
+  "version": "0.0.1",
+  "description": "PM2 REST API Interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pm2",
+    "deploy"
+  ],
+  "author": "Javier Muñoz",
+  "license": "Apache-2.0"
+}
