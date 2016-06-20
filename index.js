@@ -22,11 +22,18 @@ var eco = fs.readFileSync(deploymentFile);
 // Super simple server
 var server = restify.createServer({ name: 'pm2-rest-interface' });
 
-
-server.get('/(.*)', function(req, res){
+var getter = function(req, res){
 	res.send(JSON5.parse(eco).deploy);
-})
+}
 
+var action = function(req, res){
+	var body = req.params;
+	console.log(body);
+	res.send(200);
+}
+
+server.get('/(.*)', getter);
+server.put('/(.)*', action);
 
 server.listen(port, function(){
 	debug.info("Starting pm2-rest-interface on port " + port);
