@@ -1,5 +1,4 @@
 var pm2 = require('pm2');
-var _ = require('lodash');
 var restify = require('restify');
 var kue = require('kue');
 var JSON5 = require('json5');
@@ -13,26 +12,12 @@ var debug = {
 	error: require('debug')('error')
 }
 var ospath = require('path');
-
+var appDir = require('app-root-path').path;
 
 // Local dependencies
-var utils = require('./lib/utils.js');
 var queue = require('./lib/kueHelper.js').kueQueue;
+var eco = require('./lib/utils.js').eco;
 
-// Ecosystem file detection
-var appDir = ospath.join(ospath.dirname(module.filename),'./');
-var deploymentFile = utils.whichFileExists(
-    _.map(['ecosystem.js', 'ecosystem.json', 'ecosystem.json5'], function(file){
-        return ospath.join(appDir, file);
-    }));
-try {
-    var eco = fs.readFileSync(deploymentFile);
-    debug.info("Using " + deploymentFile + " as deployment file");
-} catch(e){
-    debug.error("Ecosystem file not found");
-    debug.error("Valid files: ecosystem.js, ecosystem.json, ecosystem.json5");
-    process.exit(1);
-}
 
 // Network settings
 var port = env.PM2RPORT || 8090;
@@ -46,7 +31,7 @@ var restServer = function(){
     server.use(restify.bodyParser());
 
     var getter = function(req, res){
-    	res.send(Object.keys(JSON5.parse(eco).deploy));
+    	res.send(Object.keys(eco).deploy);
     }
 
     var update = function(req, res){
@@ -93,4 +78,9 @@ var restServer = function(){
 
 
 exports.restServer = restServer;
+if(require.main === module){
+    restServer();
+}
+
+
 
