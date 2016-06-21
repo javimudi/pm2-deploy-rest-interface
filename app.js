@@ -31,7 +31,7 @@ var restServer = function(){
     server.use(restify.bodyParser());
 
     var getter = function(req, res){
-    	res.send(Object.keys(eco).deploy);
+    	res.send(Object.keys(eco.deploy));
     }
 
     var update = function(req, res){
