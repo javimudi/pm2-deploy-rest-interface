@@ -10,6 +10,9 @@
     "pm2",
     "deploy"
   ],
+  "bin": {
+    "pm2dri": "./server.js"
+    },
   "author": "Javier Muñoz",
   "license": "Apache-2.0",
   "dependencies": {
