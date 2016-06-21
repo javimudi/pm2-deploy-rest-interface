@@ -11,7 +11,7 @@
     "deploy"
   ],
   "bin": {
-    "pm2dri": "./server.js"
+    "pm2dri": "./cli.js"
     },
   "author": "Javier Muñoz",
   "license": "Apache-2.0",
