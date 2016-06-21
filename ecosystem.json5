@@ -2,7 +2,7 @@
   apps : [
     {
       name      : "pm2-deploy-rest-interface",
-      script    : "app.js",
+      script    : "server.js",
       env: {
         DEBUG: "info,warn,error"
       }
