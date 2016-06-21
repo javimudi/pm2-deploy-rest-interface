@@ -1,7 +1,7 @@
 {
-  "name": "pm2-rest-interface",
+  "name": "pm2-deploy-rest-interface",
   "version": "0.0.1",
-  "description": "PM2 REST API Interface",
+  "description": "PM2 DEPLOY API REST Interface",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha"
