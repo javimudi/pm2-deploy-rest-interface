@@ -20,7 +20,7 @@ var eco = fs.readFileSync(deploymentFile);
 
 
 // Super simple server
-var server = restify.createServer({ name: 'pm2-rest-interface' });
+var server = restify.createServer({ name: 'pm2-deploy-rest-interface' });
 
 var getter = function(req, res){
 	res.send(JSON5.parse(eco).deploy);
@@ -36,7 +36,7 @@ server.get('/(.*)', getter);
 server.put('/(.)*', action);
 
 server.listen(port, function(){
-	debug.info("Starting pm2-rest-interface on port " + port);
+	debug.info("Starting pm2-deploy-rest-interface on port " + port);
 });
 
 
