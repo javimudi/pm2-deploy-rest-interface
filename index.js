@@ -23,7 +23,7 @@ var eco = fs.readFileSync(deploymentFile);
 var server = restify.createServer({ name: 'pm2-deploy-rest-interface' });
 
 var getter = function(req, res){
-	res.send(JSON5.parse(eco).deploy);
+	res.send(Object.keys(JSON5.parse(eco).deploy));
 }
 
 var action = function(req, res){
