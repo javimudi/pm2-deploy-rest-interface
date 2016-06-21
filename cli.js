@@ -11,8 +11,9 @@ var eco = utils.eco;
 
 
 var appDefinition = {
-	"name": pkg.name + "_" + utils.projectPkg.name,
-	"app": "./node_modules/.bin/pm2dri"
+	name: "pm2dri_" + utils.projectPkg.name,
+	script: "./node_modules/.bin/pm2dri",
+	args: ['run']
 }
 
 var run = function(cmd){
