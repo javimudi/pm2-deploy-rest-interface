@@ -4,7 +4,7 @@
   "description": "PM2 REST API Interface",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/.bin/mocha"
   },
   "keywords": [
     "pm2",
@@ -20,5 +20,9 @@
     "pm2": "^1.1.3",
     "process": "^0.11.5",
     "restify": "^4.1.1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
   }
 }

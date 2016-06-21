@@ -17,23 +17,43 @@ var kueport = env.KUE_PORT || 8091;
 var appDir = ospath.join(ospath.dirname(module.filename),'./');
 var deploymentFile = ospath.join(appDir, 'deployment.json5');
 var eco = fs.readFileSync(deploymentFile);
-
+var queue = require('./lib/kueHelper.js');
 
 // Super simple server
 var server = restify.createServer({ name: 'pm2-deploy-rest-interface' });
+server.use(restify.bodyParser());
 
 var getter = function(req, res){
 	res.send(Object.keys(JSON5.parse(eco).deploy));
 }
 
-var action = function(req, res){
-	var body = req.params;
-	debug.info(body);
-	res.send(200);
+var update = function(req, res){
+    try {
+        var target = req.body.target;
+        debug.info("Preparing update for '" + target + "'");
+        queue.create('update', {"title": "Update for " + target, "target": target}).save();
+        res.send(202);
+    } catch(e){
+        debug.error(e);
+        res.send(400, e);
+    }	
+}
+
+var deploy = function(req, res){
+    try {
+        var target = req.body.target;
+        debug.info("Preparing deploy for '" + target + "'");
+        queue.create('deploy',  {"title": "Deploy for " + target, "target": target}).save();
+        res.send(201);
+    } catch(e){
+        debug.error(e);
+        res.send(400);
+    }
 }
 
 server.get('/(.*)', getter);
-server.put('/(.)*', action);
+server.put('/(.*)', update);
+server.post('/(.*)', deploy);
 
 server.listen(port, function(){
 	debug.info("Starting pm2-deploy-rest-interface on port " + port);
