@@ -11,8 +11,6 @@ var debug = {
 	warn: require('debug')('warn'),
 	error: require('debug')('error')
 }
-var ospath = require('path');
-var appDir = require('app-root-path').path;
 
 // Local dependencies
 var queue = require('./lib/kueHelper.js').kueQueue;
