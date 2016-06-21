@@ -13,7 +13,7 @@ var debug = {
 }
 
 // Local dependencies
-var queue = require('./lib/kueHelper.js').kueQueue;
+var queue = require('./lib/kueHelper.js');
 var eco = require('./lib/utils.js').eco;
 
 
