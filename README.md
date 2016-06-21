@@ -1,2 +1,2 @@
-# pm2-rest-interface
-PM2 REST API Interface
+# pm2-deploy-rest-interface
+PM2 DEPLOY API REST Interface
