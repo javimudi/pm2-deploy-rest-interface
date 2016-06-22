@@ -34,7 +34,7 @@ Two commands are available:
 After PM2DRI is installed and setup, the API and the web component can be accessed at [http://your_project_IP:8090](http://127.0.0.1:8090)
 
 
-## API (Commands available)
+## API (Available commands)
 
 Once PM2DRI is up and running, three commands can be sent.
 
