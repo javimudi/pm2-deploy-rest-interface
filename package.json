@@ -17,6 +17,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "app-root-path": "^1.2.1",
+    "commander": "^2.9.0",
     "debug": "^2.2.0",
     "express": "^4.14.0",
     "json5": "^0.5.0",
