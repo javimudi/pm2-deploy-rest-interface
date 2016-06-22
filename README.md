@@ -7,7 +7,7 @@ PM2 DEPLOY API REST Interface
 
 PM2DRI is a node module created to be added to a private (but not restricted) deployment repository. Sometimes you might find yourself having to deploy your software to an unmanaged environment. Thus, sensible deployment information included into your main repo ecosystem file should not be accesible for a third party. An easy solution for this situation could be having a secondary repository, including only deployment data. PM2DRI was born thinking of integrating this sort of repository with your favourite CI tool.
 
-## How does PM2DRI works?
+## How does PM2DRI work?
 
 PM2DRI includes (hopefully) three well-known components:
 * A [Restify](http://restify.com) REST API, listening to basic PM2 Deploy commands (deploy, update), which will trigger commands on demand. Commands can be requested at the final stage of your CI pipelines.
@@ -51,7 +51,7 @@ Once PM2DRI is up and running, three commands can be sent.
 
 # Next Steps
 
-* Tests
+* Tests	
 * AngularJS web component to handle tasks
 * Authentication engine
 * Ecosystem editing
