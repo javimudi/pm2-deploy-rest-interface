@@ -39,7 +39,6 @@ After PM2DRI is installed and setup, the API and the web component can be access
 Once PM2DRI is up and running, three commands can be sent.
 
 #### PM2 ENVIRONMENTS GETTER
-
 * `GET http://your_IP:8090/getenvs`. An array with your deployment environments is obtained.
 	* E.g. : `['test', 'production', 'client1']`
 
