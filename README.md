@@ -51,6 +51,7 @@ Once PM2DRI is up and running, three commands can be sent.
 
 # Next Steps
 
+* Tests
 * AngularJS web component to handle tasks
 * Authentication engine
 * Ecosystem editing
