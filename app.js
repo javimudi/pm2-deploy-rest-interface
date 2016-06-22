@@ -27,6 +27,7 @@ var restServer = function(){
     // Super simple server
     var server = restify.createServer({ name: 'pm2-deploy-rest-interface' });
     server.use(restify.bodyParser());
+    server.use(express.static(__dirname+"/public"));
 
     var getter = function(req, res){
     	res.send(Object.keys(eco.deploy));
@@ -34,7 +35,7 @@ var restServer = function(){
 
     var update = function(req, res){
         try {
-            var target = req.body.target;
+            var target = req.params.environ;
             debug.info("Preparing update for '" + target + "'");
             queue.create('update', {"title": "Update for " + target, "target": target}).save();
             res.send(202);
@@ -46,7 +47,7 @@ var restServer = function(){
 
     var deploy = function(req, res){
         try {
-            var target = req.body.target;
+            var target = req.params.environ;
             debug.info("Preparing deploy for '" + target + "'");
             queue.create('deploy',  {"title": "Deploy for " + target, "target": target}).save();
             res.send(201);
@@ -56,11 +57,17 @@ var restServer = function(){
         }
     }
 
-    server.get('/(.*)', getter);
-    server.put('/(.*)', update);
-    server.post('/(.*)', deploy);
+    // API 
+    server.get('/getenvs(.*)', getter);
+    server.put('/:environ', update);
+    server.post('/:environ', deploy);
 
-
+    // Super simple app
+    server.get('/', function(req, res, next){
+        var file = fs.readFileSync(__dirname+'/public/index.html', 'utf8');
+        res.send(200, file);
+        return next();
+    });
 
     server.listen(port, function(){
         debug.info("Starting pm2-deploy-rest-interface on port " + port);
