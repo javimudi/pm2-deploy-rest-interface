@@ -18,8 +18,8 @@ var eco = require('./lib/utils.js').eco;
 
 
 // Network settings
-var port = env.PM2RPORT || 8090;
-var kueport = env.KUE_PORT || 8091;
+var port = env.PM2DRIPORT || 8090;
+var kueport = env.KUEPORT || 8091;
 
 
 var restServer = function(){
@@ -28,6 +28,7 @@ var restServer = function(){
     var server = restify.createServer({ name: 'pm2-deploy-rest-interface' });
     server.use(restify.bodyParser());
     server.use(express.static(__dirname+"/public"));
+
 
     var getter = function(req, res){
     	res.send(Object.keys(eco.deploy));
@@ -62,12 +63,13 @@ var restServer = function(){
     server.put('/:environ', update);
     server.post('/:environ', deploy);
 
+
     // Super simple app
-    server.get('/', function(req, res, next){
-        var file = fs.readFileSync(__dirname+'/public/index.html', 'utf8');
-        res.send(200, file);
-        return next();
-    });
+    server.get('/', restify.serveStatic({
+      directory: 'public',
+      default: 'index.html'
+    }));
+
 
     server.listen(port, function(){
         debug.info("Starting pm2-deploy-rest-interface on port " + port);
