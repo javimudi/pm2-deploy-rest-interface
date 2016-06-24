@@ -26,6 +26,8 @@ var restServer = function(){
 
     // Super simple server
     var server = restify.createServer({ name: 'pm2-deploy-rest-interface' });
+    server.use(restify.acceptParser(server.acceptable));
+    server.use(restify.queryParser());
     server.use(restify.bodyParser());
     server.use(express.static(__dirname+"/public"));
 
@@ -65,11 +67,14 @@ var restServer = function(){
 
 
     // Super simple app
-    server.get('/', restify.serveStatic({
-      directory: 'public',
-      default: 'index.html'
+    server.get(/\/public\/?.*/, restify.serveStatic({
+        directory: __dirname
     }));
 
+    server.get('/', restify.serveStatic({ 
+        directory: 'public',
+        default: 'index.html'
+    }));
 
     server.listen(port, function(){
         debug.info("Starting pm2-deploy-rest-interface on port " + port);

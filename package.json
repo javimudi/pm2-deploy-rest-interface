@@ -4,7 +4,8 @@
   "description": "PM2 DEPLOY API REST Interface",
   "main": "app.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha"
+    "test": "./node_modules/.bin/mocha",
+    "postinstall": "./node_modules/.bin/bower install -F"
   },
   "keywords": [
     "pm2",
@@ -17,6 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "app-root-path": "^1.2.1",
+    "bower": "^1.7.9",
     "commander": "^2.9.0",
     "debug": "^2.2.0",
     "express": "^4.14.0",
