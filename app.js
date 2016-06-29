@@ -40,8 +40,14 @@ var restServer = function(){
         try {
             var target = req.params.environ;
             debug.info("Preparing update for '" + target + "'");
-            queue.create('update', {"title": "Update for " + target, "target": target}).save();
-            res.send(202);
+            var job = queue.create('update', {"title": "Update for " + target, "target": target})
+            .save(function(err){
+                if(!err){
+                    res.send(202, job.id);
+                } else {
+                    res.send(400, err);
+                }
+            });
         } catch(e){
             debug.error(e);
             res.send(400, e);
@@ -52,11 +58,17 @@ var restServer = function(){
         try {
             var target = req.params.environ;
             debug.info("Preparing deploy for '" + target + "'");
-            queue.create('deploy',  {"title": "Deploy for " + target, "target": target}).save();
-            res.send(201);
+            var job = queue.create('deploy',  {"title": "Deploy for " + target, "target": target})
+            .save(function(err){
+                if(!err){
+                    res.send(201, job.id);
+                } else {
+                    res.send(400, err);
+                }
+            });
         } catch(e){
             debug.error(e);
-            res.send(400);
+            res.send(400, e);
         }
     }
 

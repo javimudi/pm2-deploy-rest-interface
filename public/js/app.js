@@ -2,10 +2,39 @@
 
 var app = angular.module('pm2dri', []);
 
+
+app.factory('socketService', ['$rootScope', function($rootScope) {
+    var socket = io.connect({
+        'reconnect': true
+    });
+    return {
+        on: function(eventName, callback) {
+            socket.on(eventName, function() {
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    callback.apply(socket, args);
+                });
+            });
+        },
+        emit: function(eventName, data, callback) {
+            socket.emit(eventName, data, function() {
+                var args = arguments;
+                $rootScope.$apply(function() {
+                    if (callback) {
+                        callback.apply(socket, args);
+                    }
+                });
+            })
+        }
+    };
+}]);
+
 app.factory('envsService', [ '$http', 
 	function($http){
 
 		var envs = [];
+		var updating = [];
+		var deploying = [];
 
 		var getenvs = function(){
 			return $http.get('/getenvs').then(function(response){
@@ -16,21 +45,35 @@ app.factory('envsService', [ '$http',
 
 		var deployEnviron = function(environ){
 			return $http.post('/'+environ).then(function(response){
-				return (response.status === 201);
-			});
+				if(response.status === 201){
+					return response.data
+				}
+				else {
+					return false;
+				}
+			}, function(){ return false });
 		}
 
 		var updateEnviron = function(environ){
 			return $http.put('/'+environ).then(function(response){
-				return (response.status === 202);
-			})
+				if(response.status === 202){ 
+					return response.data 
+				}
+				else {
+					return false;
+				}
+			}, function(){ return false });
 		}
 
 		return {
 			getenvs: getenvs,
 			envs : function(){ return envs; },
 			deployEnviron: deployEnviron,
-			updateEnviron: updateEnviron
+			updateEnviron: updateEnviron,
+			pushDeploying: deploying.push,
+			pushUpdating: updating.push,
+			getUpdating: function(){ return updating },
+			getDeploying: function(){ return deploying }
 		}
 
 	}]);
@@ -39,10 +82,12 @@ app.controller('deployTableCtrl', [ '$scope', 'envsService',
 	function($scope, envsService){
 		$scope.init = function(){
 			envsService.getenvs().then(function(response){
-				console.log(response);
 				$scope.environments = response;
 			})
 		}
+
+		$scope.deploying = {};
+		$scope.updating = {};
 
 		$scope.deployEnviron = function(environ){
 			swal({
@@ -56,8 +101,9 @@ app.controller('deployTableCtrl', [ '$scope', 'envsService',
 				function(){
 					envsService.deployEnviron(environ).then(function(response){
 						swal(response);
-						if(response===true){
-							swal("Good job!", "It was enqueued", "success")
+						if(response!==false){
+							swal("Good job!", "It was enqueued", "success");
+							$scope.deploying[environ] = response;
 						} else {
 							swal("Bad news", "The action was rejected", "error")
 						}
@@ -78,9 +124,9 @@ app.controller('deployTableCtrl', [ '$scope', 'envsService',
 				},
 				function(){
 					envsService.updateEnviron(environ).then(function(response){
-						console.log(response);
-						if(response===true){
-							swal("Good job!", "It was enqueued", "success")
+						if(response!==false){
+							swal("Good job!", "It was enqueued", "success");
+							$scope.updating[environ] = response
 						} else {
 							swal("Bad news", "The action was rejected", "error")
 						}
@@ -100,12 +146,22 @@ app.directive('deployTable', function(){
 	}
 });
 
+app.controller('jobProgressCtrl', ['$scope',
+	function($scope){
+		console.log($scope.jobid);
+	}]);
 
 
-app.filter('capitalize', function() {
-  return function(input, scope) {
-    if (input!=null)
-    input = input.toLowerCase();
-    return input.substring(0,1).toUpperCase()+input.substring(1);
-  }
-});
+
+app.directive('jobProgress', function(){
+	return {
+		restrict: 'AE',
+		templateUrl: '/public/templates/jobProgress.html.tpl',		
+		link: function(scope, elem, attrs){
+			attrs.$observe('jobid', function(id){
+				scope.jobid = id;
+			})
+		},
+		controller: "jobProgressCtrl"
+	}
+})

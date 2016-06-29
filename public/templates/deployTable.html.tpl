@@ -10,17 +10,29 @@
 	<td class="vert-align">
 		<h3 class="text-capitalize">{{environ}}</h3>
 	</td>
-	<td>
-		<button class="btn btn-primary btn-lg" ng-click="deployEnviron(environ)">
+
+
+	<td ng-if="!deploying[environ] && !updating[environ]">
+		<button class="btn btn-primary btn-lg" 
+			ng-click="deployEnviron(environ)"
+			ng-disabled="updating[environ]">
 			<span class="glyphicon glyphicon-plus"></span>
 			Deploy
 		</button>
 	</td>
-	<td>
-		<button class="btn btn-success btn-lg" ng-click="updateEnviron(environ)">
+
+	<td ng-if="!updating[environ] && !deploying[environ]">
+		<button class="btn btn-success btn-lg" 
+			ng-click="updateEnviron(environ)"
+			ng-disabled="deploying[environ]">
 			<span class="glyphicon glyphicon-repeat"></span>			
 			Update
 		</button>
 	</td>
+
+	<td colspan="2" style="width: 30%" ng-if="updating[environ] || deploying[environ]">
+		<job-progress jobid="{{ updating[environ]}}"></job-progress>
+	</td>
 </tbody>
+
 </table>
