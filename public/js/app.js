@@ -78,12 +78,20 @@ app.factory('envsService', [ '$http',
 
 	}]);
 
-app.controller('deployTableCtrl', [ '$scope', 'envsService',
-	function($scope, envsService){
+app.controller('deployTableCtrl', [ '$scope', 'envsService', 'socketService',
+	function($scope, envsService, socketService){
 		$scope.init = function(){
 			envsService.getenvs().then(function(response){
 				$scope.environments = response;
-			})
+			});
+
+	        // Init
+	        (function() {
+	            socketService.on('connect', function() {
+	                console.log("Connected to Socket.IO");
+	            });
+	        })();
+
 		}
 
 		$scope.deploying = {};
@@ -148,7 +156,12 @@ app.directive('deployTable', function(){
 
 app.controller('jobProgressCtrl', ['$scope', 'socketService',
 	function($scope, socketService){
-		console.log($scope.jobid);
+		(function(){
+			console.log($scope.jobid);
+			socketService.on('jobid_'+$scope.jobid, function(percentage){
+				$scope.percentage = percentage;
+			});
+		}());
 	}]);
 
 

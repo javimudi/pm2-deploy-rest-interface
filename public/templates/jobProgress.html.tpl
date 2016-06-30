@@ -1,10 +1,10 @@
 <div class="progress">
   <div class="progress-bar progress-bar-striped progress-bar-warning active" 
   	role="progressbar" 
-  	aria-valuenow="5" 
+  	aria-valuenow="{{percentage}}" 
   	aria-valuemin="0" 
   	aria-valuemax="100" 
-  	style="width: 5%">
-    <span class="sr-only">5% Complete</span>
+  	style="width: {{percentage}}%">
+    <span class="sr-only">{{percentage}}% Complete</span>
   </div>
 </div>
