@@ -146,8 +146,8 @@ app.directive('deployTable', function(){
 	}
 });
 
-app.controller('jobProgressCtrl', ['$scope',
-	function($scope){
+app.controller('jobProgressCtrl', ['$scope', 'socketService',
+	function($scope, socketService){
 		console.log($scope.jobid);
 	}]);
 

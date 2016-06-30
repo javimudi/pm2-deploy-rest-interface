@@ -22,6 +22,7 @@ var port = env.PM2DRIPORT || 8090;
 var kueport = env.KUEPORT || 8091;
 
 
+
 var restServer = function(){
 
     // Super simple server
@@ -30,6 +31,8 @@ var restServer = function(){
     server.use(restify.queryParser());
     server.use(restify.bodyParser());
     server.use(express.static(__dirname+"/public"));
+
+
 
 
     var getter = function(req, res){
@@ -88,10 +91,22 @@ var restServer = function(){
         default: 'index.html'
     }));
 
-    server.listen(port, function(){
+
+    var app = server.listen(port, function(){
         debug.info("Starting pm2-deploy-rest-interface on port " + port);
     });
 
+    // Socket.io stuff
+    var io = require('socket.io').listen(app, function() {
+        debug.info("Socket.io listening... ")
+    });
+
+
+    io.sockets.on('connection', function(socket) {
+        debug.info("New client");
+    });
+
+    // Kue stuff
     var app_kue = express();
     app_kue.use(kue.app);
     app_kue.listen(kueport,  function(){
