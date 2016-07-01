@@ -103,9 +103,8 @@ var restServer = function(){
 
     io.sockets.on('connection', function(socket) {
         debug.info("New client");
-        socket.on('updates', function(data){
-            console.log(data);
-            io.sockets.emit('updates', JSON.stringify(data));
+        socket.on('progress', function(data){
+            io.sockets.emit('updates', data);
         })
     });
 

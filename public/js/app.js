@@ -78,19 +78,14 @@ app.factory('envsService', [ '$http',
 
 	}]);
 
-app.controller('deployTableCtrl', [ '$scope', 'envsService', 'socketService',
-	function($scope, envsService, socketService){
+app.controller('deployTableCtrl', [ '$scope', 'envsService', 'updatesService',
+	function($scope, envsService, updatesService){
 		$scope.init = function(){
 			envsService.getenvs().then(function(response){
 				$scope.environments = response;
 			});
 
-	        // Init
-	        (function() {
-	            socketService.on('connect', function() {
-	                console.log("Connected to Socket.IO");
-	            });
-	        })();
+			updatesService.init();
 
 		}
 
@@ -154,24 +149,64 @@ app.directive('deployTable', function(){
 	}
 });
 
-app.controller('jobProgressCtrl', ['$scope', '$timeout', 'socketService',
-	function($scope, $timeout, socketService){
+
+app.factory('updatesService', ['socketService',
+	function(socketService){
+
+		var updates = {};
+
+        // Init
+	    var init = function() {
+
+
+            socketService.on('connect', function() {
+                console.log("Connected to Socket.IO");
+            });
+
+            socketService.on('error', function(error){
+            	console.log(error);
+            })
+                
+			socketService.on('updates', function(data){
+				console.log("New update");
+				var parsed = JSON.parse(data);
+				console.log(parsed);
+				parsed.forEach(function(key){
+					console.log(key);
+
+				});
+			});
+
+
+        };
+
+
+		return {
+			getUpdates: function(){ return updates },
+			init: init
+		}
+
+
+	}]);
+
+app.controller('jobProgressCtrl', ['$scope', 'updatesService',
+	function($scope, updatesService){
 
 		$scope.$watch(function(){
 			return $scope.jobid;
 		},
 		function(newV){
 			if(typeof newV!='undefined'){
-				var room = 'jobid_'+$scope.jobid;			
-				socketService.on('updates', function(update){
-					console.log(update)
-					if(room in update){
-						$scope.percentage = update[room];
-					}
+				var room = 'jobid_'+$scope.jobid;
+				console.log(room);
 
-				});
+				$scope.$watch(function(){
+					return updatesService.getUpdates(); 
+				}, function(newV, oldV){
+					console.log("Changed");
+				}); // Object Value, not reference
 			}
-		});
+		}); 
 
 	}]);
 
