@@ -156,24 +156,22 @@ app.directive('deployTable', function(){
 
 app.controller('jobProgressCtrl', ['$scope', '$timeout', 'socketService',
 	function($scope, $timeout, socketService){
-		// Init
-		(function(){
-			console.log($scope.jobid);
-			socketService.on('jobid_'+$scope.jobid, function(percentage){
-				$scope.percentage = percentage;
-			});
 
-			// Fake progress, until Socket.IO works
-			$timeout(function(){
-				$scope.percentage = 50;
-			}, 2500);
+		$scope.$watch(function(){
+			return $scope.jobid;
+		},
+		function(newV){
+			if(typeof newV!='undefined'){
+				var room = 'jobid_'+$scope.jobid;			
+				socketService.on('updates', function(update){
+					console.log(update)
+					if(room in update){
+						$scope.percentage = update[room];
+					}
 
-			$timeout(function(){
-				$scope.percentage = 100;
-			}, 3000);
-
-		}());
-
+				});
+			}
+		});
 
 	}]);
 

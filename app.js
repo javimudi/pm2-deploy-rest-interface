@@ -16,6 +16,7 @@ var debug = {
 var queue = require('./lib/kueHelper.js');
 var eco = require('./lib/utils.js').eco;
 
+var redis = require('socket.io-redis');
 
 // Network settings
 var port = env.PM2DRIPORT || 8090;
@@ -104,7 +105,12 @@ var restServer = function(){
 
     io.sockets.on('connection', function(socket) {
         debug.info("New client");
+        socket.on('updates', function(data){
+            console.log(data);
+            io.sockets.emit('updates', data);
+        })
     });
+
 
     // Kue stuff
     var app_kue = express();
@@ -112,6 +118,7 @@ var restServer = function(){
     app_kue.listen(kueport,  function(){
          debug.info("Kue UI listening on port " + kueport + "...");
     });
+
 
 }
 
