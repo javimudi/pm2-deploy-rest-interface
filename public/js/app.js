@@ -150,14 +150,13 @@ app.directive('deployTable', function(){
 });
 
 
-app.factory('updatesService', ['socketService',
-	function(socketService){
+app.factory('updatesService', ['$timeout', 'socketService',
+	function($timeout, socketService){
 
 		var updates = {};
 
         // Init
 	    var init = function() {
-
 
             socketService.on('connect', function() {
                 console.log("Connected to Socket.IO");
@@ -168,18 +167,15 @@ app.factory('updatesService', ['socketService',
             })
                 
 			socketService.on('updates', function(data){
-				console.log("New update");
 				var parsed = JSON.parse(data);
-				console.log(parsed);
-				parsed.forEach(function(key){
-					console.log(key);
-
+				angular.forEach(Object.keys(parsed), function(key){
+					$timeout(function(){
+						updates[key] = parsed[key];
+					}, 1000);
 				});
 			});
 
-
         };
-
 
 		return {
 			getUpdates: function(){ return updates },
@@ -191,35 +187,59 @@ app.factory('updatesService', ['socketService',
 
 app.controller('jobProgressCtrl', ['$scope', 'updatesService',
 	function($scope, updatesService){
-
 		$scope.$watch(function(){
 			return $scope.jobid;
 		},
 		function(newV){
+
+			console.log($scope.$parent.updating);
+			console.log($scope.environ);
+
 			if(typeof newV!='undefined'){
 				var room = 'jobid_'+$scope.jobid;
-				console.log(room);
-
 				$scope.$watch(function(){
-					return updatesService.getUpdates(); 
-				}, function(newV, oldV){
-					console.log("Changed");
-				}); // Object Value, not reference
+					return updatesService.getUpdates();
+				},
+				function(newV){
+					$scope.percentage = newV[room];
+					if(newV[room]>=100{
+						$timeout(function(){
+							delete $scope.$parent.updating[$scope.environ];
+						}, 5000);
+					})
+		
+				}, true);
 			}
 		}); 
 
+
+		$scope.barColor = function(){
+			if($scope.percentage<=40){
+				return 'progress-bar-warning';
+			}
+			else if ($scope.percentage>40 && $scope.percentage < 100){
+				return 'progress-bar-info';
+			}
+			else {
+				return 'progress-bar-success';
+			}
+		}
 	}]);
 
 
 
 app.directive('jobProgress', function(){
 	return {
-		restrict: 'AE',
+		restrict: 'E',
 		templateUrl: '/public/templates/jobProgress.html.tpl',		
 		link: function(scope, elem, attrs){
 			attrs.$observe('jobid', function(id){
 				scope.jobid = id;
 			})
+
+			attr.$observe('environ', function(environ){
+				scope.environ = environ;
+			});
 		},
 		controller: "jobProgressCtrl"
 	}
