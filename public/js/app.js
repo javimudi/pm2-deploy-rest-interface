@@ -185,16 +185,12 @@ app.factory('updatesService', ['$timeout', 'socketService',
 
 	}]);
 
-app.controller('jobProgressCtrl', ['$scope', 'updatesService',
-	function($scope, updatesService){
+app.controller('jobProgressCtrl', ['$scope','$timeout', 'updatesService',
+	function($scope, $timeout, updatesService){
 		$scope.$watch(function(){
 			return $scope.jobid;
 		},
 		function(newV){
-
-			console.log($scope.$parent.updating);
-			console.log($scope.environ);
-
 			if(typeof newV!='undefined'){
 				var room = 'jobid_'+$scope.jobid;
 				$scope.$watch(function(){
@@ -202,12 +198,11 @@ app.controller('jobProgressCtrl', ['$scope', 'updatesService',
 				},
 				function(newV){
 					$scope.percentage = newV[room];
-					if(newV[room]>=100{
+					if(newV[room]>=100){
 						$timeout(function(){
 							delete $scope.$parent.updating[$scope.environ];
 						}, 5000);
-					})
-		
+					}
 				}, true);
 			}
 		}); 
