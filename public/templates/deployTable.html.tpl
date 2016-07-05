@@ -31,7 +31,7 @@
 	</td>
 
 	<td colspan="2" style="width: 30%" ng-if="updating[environ] || deploying[environ]">
-		<job-progress jobid="{{updating[environ]}}" environ="environ"></job-progress>
+		<job-progress jobid="{{updating[environ]}}" environ="{{environ}}"></job-progress>
 	</td>
 </tbody>
 
