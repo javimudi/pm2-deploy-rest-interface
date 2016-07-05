@@ -185,8 +185,17 @@ app.factory('updatesService', ['$timeout', 'socketService',
 
 	}]);
 
-app.controller('jobProgressCtrl', ['$scope','$timeout', 'updatesService',
-	function($scope, $timeout, updatesService){
+
+app.factory('kueService', ['$http', 
+	function($http){
+		return {
+			cancelJob: function(jobid){ console.log("Dummy delete"); }
+		}
+
+	}]);
+
+app.controller('jobProgressCtrl', ['$scope','$timeout', 'updatesService', 'kueService',
+	function($scope, $timeout, updatesService, kueService){
 		$scope.$watch(function(){
 			return $scope.jobid;
 		},
@@ -219,6 +228,8 @@ app.controller('jobProgressCtrl', ['$scope','$timeout', 'updatesService',
 				return 'progress-bar-success';
 			}
 		}
+
+		$scope.cancelJob = kueService.cancelJob;
 	}]);
 
 
