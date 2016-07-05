@@ -232,7 +232,7 @@ app.directive('jobProgress', function(){
 				scope.jobid = id;
 			})
 
-			attr.$observe('environ', function(environ){
+			attrs.$observe('environ', function(environ){
 				scope.environ = environ;
 			});
 		},
