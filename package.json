@@ -17,7 +17,7 @@
   "author": "Javier Muñoz",
   "license": "Apache-2.0",
   "dependencies": {
-    "app-root-path": "^1.2.1",
+    "app-root-path": "^2.0.1",
     "bower": "^1.7.9",
     "commander": "^2.9.0",
     "debug": "^2.2.0",
